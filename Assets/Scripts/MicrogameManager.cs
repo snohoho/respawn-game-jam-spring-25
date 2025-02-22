@@ -16,8 +16,6 @@ public class MicrogameManager : MonoBehaviour
     private float newMicrogameTimer;
     private int newMicrogameChance;
     private int randomMicrogame;
-    private Queue<int> microgameOrder;
-    private int[] microgameOrderArr;
 
     void Start() {
         timeBeforeStart = 10f;
@@ -25,18 +23,10 @@ public class MicrogameManager : MonoBehaviour
         newMicrogameTimer = 0f;
         newMicrogameChance = 50;
         randomMicrogame = 0;
-
-        microgameOrder = new Queue<int>();
-        microgameOrder.Enqueue(0);
-        microgameOrder.Enqueue(1);
-        microgameOrder.Enqueue(2);
     }
 
     void Update() {
-        microgameOrderArr = microgameOrder.ToArray();
-        mainCanvas.sortingOrder = System.Array.IndexOf(microgameOrderArr, 0) + 1;
-        codeCanvas.sortingOrder = System.Array.IndexOf(microgameOrderArr, 1) + 1;
-        discCanvas.sortingOrder = System.Array.IndexOf(microgameOrderArr, 2) + 1;
+        
     }
 
     void FixedUpdate() {
@@ -76,27 +66,32 @@ public class MicrogameManager : MonoBehaviour
     }
 
     public void OpenMicrogame(string microgame) {
-        int v;
         switch(microgame) {
             case "main":
-                if(discordMicrogame.microgameOpen || codingMicrogame.microgameOpen) {
-                    v = microgameOrder.Dequeue();
-                    microgameOrder.Enqueue(v);
+                if(mainCanvas.sortingOrder != 2) {
+                    mainCanvas.sortingOrder = 2;
+                    
+                    discCanvas.sortingOrder--;
+                    codeCanvas.sortingOrder--;
                 }
                 discordMicrogame.microgameOpen = false;
                 codingMicrogame.microgameOpen = false;
                 break;
             case "disc":
-                if(!discordMicrogame.microgameOpen) {
-                    v = microgameOrder.Dequeue();
-                    microgameOrder.Enqueue(v);
+                if(discCanvas.sortingOrder != 2) {
+                    discCanvas.sortingOrder = 2;
+
+                    mainCanvas.sortingOrder--;
+                    codeCanvas.sortingOrder--;
                 }
                 discordMicrogame.microgameOpen = true;
                 break;
             case "code":
-                if(!codingMicrogame.microgameOpen) {
-                    v = microgameOrder.Dequeue();
-                    microgameOrder.Enqueue(v);
+                if(codeCanvas.sortingOrder != 2) {
+                    codeCanvas.sortingOrder = 2;
+
+                    mainCanvas.sortingOrder--;
+                    discCanvas.sortingOrder--;
                 }
                 codingMicrogame.microgameOpen = true;
                 break;
