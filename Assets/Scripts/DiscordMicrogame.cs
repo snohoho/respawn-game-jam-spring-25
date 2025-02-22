@@ -24,6 +24,7 @@ public class DiscordMicrogame : MonoBehaviour
     private int randMsgType;
     private string randMsg;
     public bool responseComplete;
+    public string successFlag;
     private float responseTimer;
 
     void Start() {
@@ -53,21 +54,32 @@ public class DiscordMicrogame : MonoBehaviour
         if(pinged && !microgameOpen) {
             responseTimer += Time.deltaTime;
 
-            if(responseTimer > 10.0f && !responseComplete) {
+            if(responseTimer > 15.0f && !responseComplete) {
                 //count as a worse response failed
+                successFlag = "worse";
                 pinged = false;
+                responseTimer = 0;
             }
         }
 
         if(microgameOpen) {
             responseTimer += Time.deltaTime;
-            if(responseTimer > 10.0f && !responseComplete) {
-                //count as a worse response failed
-            }
-
             if(responseComplete) {
-
+                pinged = false;
+                responseTimer = 0;
             }
+
+            if(responseTimer > 15.0f && !responseComplete) {
+                //count as a worse response failed
+                successFlag = "worse";
+                pinged = false;
+                responseTimer = 0;
+            }
+        }
+
+        if(responseComplete && !microgameOpen) {
+            responseComplete = false;
+            discMsg.text = "";
         }
     }
 
@@ -76,9 +88,11 @@ public class DiscordMicrogame : MonoBehaviour
         pinged = false;
         if(randMsgType == 0) {
             //count as response success
+            successFlag = "success";
         }
         else {
             //count as response failed
+            successFlag = "fail";
         }
     }
 
@@ -87,9 +101,11 @@ public class DiscordMicrogame : MonoBehaviour
         pinged = false;
         if(randMsgType == 0) {
             //count as response failed
+            successFlag = "fail";
         }
         else {
             //count as response success
+            successFlag = "success";
         }
     }
 }

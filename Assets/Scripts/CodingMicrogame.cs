@@ -35,6 +35,7 @@ public class CodingMicrogame : MonoBehaviour
     private bool buttonPressed;
     public bool codeComplete;
     private float responseTimer;
+    public string successFlag;
     private System.IDisposable keyboardListener;
 
     void Start() {
@@ -61,21 +62,32 @@ public class CodingMicrogame : MonoBehaviour
         if(pinged && !microgameOpen) {
             responseTimer += Time.deltaTime;
 
-            if(responseTimer > 10.0f && !codeComplete) {
+            if(responseTimer > 15.0f && !codeComplete) {
                 //count as a worse response failed
+                successFlag = "worse";
                 pinged = false;
             }
         }
 
-        if(microgameOpen) {
+        if(pinged && microgameOpen) {
             responseTimer += Time.deltaTime;
-            if(responseTimer > 10.0f && !codeComplete) {
-                //count as a worse response failed
-            }
 
             if(codeComplete) {
-
+                successFlag = "success";
+                pinged = false;
+                responseTimer = 0;
             }
+            
+            if(responseTimer > 15.0f && !codeComplete) {
+                successFlag = "fail";
+                pinged = false;
+                responseTimer = 0;
+            }
+        }
+
+        if(codeComplete && !microgameOpen) {
+            codeComplete = false;
+            codeText.text = "public class CounterHackProtocol {\n";
         }
     }
 
@@ -86,7 +98,7 @@ public class CodingMicrogame : MonoBehaviour
                 currStringCt = 0;
                 codeComplete = true;
                 codeText.text += "}\n\n";
-                codeText.text += "public class CounterHackProtocol {\n";
+                codeText.text += "[COUNTERHACK SUCCESSFUL]";
 
                 randCodeBlock = Random.Range(0,codeBlocks.Length);
             }

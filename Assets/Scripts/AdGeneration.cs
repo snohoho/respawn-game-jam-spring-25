@@ -9,25 +9,41 @@ public class AdGeneration : MonoBehaviour
     private GameObject randAd;
     private float spawnTimer;
     public int spawnChance;
+    private float timeBeforeStart;
 
-    [SerializeField] CodingMicrogame codingMicrogame;
+    [SerializeField] private CodingMicrogame codingMicrogame;
     public bool adsPaused;
+    public bool incChance;
 
     void Start() {
-        spawnChance = 10;
+        spawnChance = 25;
         spawnTimer = 0.0f;
+        timeBeforeStart = 10f;
     }
 
     void FixedUpdate() {
-        //stop ads from showing up
-        if(codingMicrogame.codeComplete == true) {
+        //wait 10s before spawning ads
+        if(timeBeforeStart > 0) {
+            timeBeforeStart -= Time.deltaTime;
+            return;
+        }
+
+        if(codingMicrogame.successFlag == "success") {
             StartCoroutine(AdsPaused());
-            codingMicrogame.codeComplete = false;
+        }
+        else if(codingMicrogame.successFlag == "fail") {
+            StartCoroutine(IncreasedChance());
+            spawnChance = 50;
+            
+        }
+        else if(codingMicrogame.successFlag == "worse") {
+            StartCoroutine(IncreasedChance());
+            spawnChance = 75;
         }
 
         spawnTimer += Time.deltaTime;
 
-        if(Random.Range(0,100) < spawnChance && spawnTimer > 0.5f) {
+        if(Random.Range(0,100) < spawnChance && spawnTimer >= 1f && !adsPaused) {
             spawnTimer = 0.0f;
 
             randAd = adsPrefabs[Random.Range(0,adsPrefabs.Length)];
@@ -36,7 +52,10 @@ public class AdGeneration : MonoBehaviour
             float randPosY = Random.Range(-25,526);
 
             Instantiate(randAd, new Vector3(randPosX,randPosY,0), Quaternion.Euler(Vector3.zero), this.transform);
-        }   
+        }
+        if(spawnTimer >= 1f) {
+            spawnTimer = 0.0f;
+        }
     }
 
     IEnumerator AdsPaused() {
@@ -45,6 +64,15 @@ public class AdGeneration : MonoBehaviour
         while(adsPaused) {
             yield return new WaitForSeconds(10f);
             adsPaused = false;
+        }
+    }
+
+    IEnumerator IncreasedChance() {
+        incChance = true;
+
+        while(incChance) {
+            yield return new WaitForSeconds(10f);
+            incChance = false;
         }
     }
 }
