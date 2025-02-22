@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class AdGeneration : MonoBehaviour
 {
@@ -12,10 +11,7 @@ public class AdGeneration : MonoBehaviour
 
     void Start() {
         spawnChance = 10;
-    }
-
-    void Update() {
-        
+        spawnTimer = 0.0f;
     }
 
     void FixedUpdate() {
@@ -32,6 +28,4 @@ public class AdGeneration : MonoBehaviour
             Instantiate(randAd, new Vector3(randPosX,randPosY,0), Quaternion.Euler(Vector3.zero), this.transform);
         }   
     }
-
-    
 }
