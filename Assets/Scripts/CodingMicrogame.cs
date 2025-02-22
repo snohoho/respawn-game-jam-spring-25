@@ -10,6 +10,7 @@ using UnityEngine.InputSystem.Controls;
 public class CodingMicrogame : MonoBehaviour
 {
     public bool microgameOpen;
+    public bool pinged;
 
     string[] codeBlocks = new string[]
         {
@@ -33,6 +34,7 @@ public class CodingMicrogame : MonoBehaviour
     private int currStringCt;
     private bool buttonPressed;
     public bool codeComplete;
+    private float responseTimer;
     private System.IDisposable keyboardListener;
 
     void Start() {
@@ -56,6 +58,25 @@ public class CodingMicrogame : MonoBehaviour
     }
 
     void FixedUpdate() {
+        if(pinged && !microgameOpen) {
+            responseTimer += Time.deltaTime;
+
+            if(responseTimer > 10.0f && !codeComplete) {
+                //count as a worse response failed
+                pinged = false;
+            }
+        }
+
+        if(microgameOpen) {
+            responseTimer += Time.deltaTime;
+            if(responseTimer > 10.0f && !codeComplete) {
+                //count as a worse response failed
+            }
+
+            if(codeComplete) {
+
+            }
+        }
     }
 
     private void AddText(InputControl act) {

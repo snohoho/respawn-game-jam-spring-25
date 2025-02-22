@@ -8,6 +8,7 @@ public class DiscordMicrogame : MonoBehaviour
 {
     public bool microgameOpen;
     public bool pinged;
+    public bool responding;
 
     string[] msgToRespond = new string[]
         {
@@ -23,18 +24,18 @@ public class DiscordMicrogame : MonoBehaviour
     private int randMsgType;
     private string randMsg;
     public bool responseComplete;
-    private bool responding;
     private float responseTimer;
 
     void Start() {
+        pinged = false;
         responseComplete = false;
-        responding = false;
         microgameOpen = false;
         responseTimer = 0;
     }
 
     void Update() {
-        if(pinged && microgameOpen) {
+        if(pinged && microgameOpen && !responding) {
+            responding = true;
             randMsgType = Random.Range(0,2);
 
             if(randMsgType == 0) {
@@ -43,6 +44,8 @@ public class DiscordMicrogame : MonoBehaviour
             else {
                 randMsg = msgToRespond[Random.Range(0,msgToIgnore.Length)];
             }
+
+            discMsg.text = randMsg;
         }
     }
 
@@ -56,7 +59,7 @@ public class DiscordMicrogame : MonoBehaviour
             }
         }
 
-        if(responding) {
+        if(microgameOpen) {
             responseTimer += Time.deltaTime;
             if(responseTimer > 10.0f && !responseComplete) {
                 //count as a worse response failed
@@ -69,6 +72,8 @@ public class DiscordMicrogame : MonoBehaviour
     }
 
     public void buttonResponseReply() {
+        responseComplete = true;
+        pinged = false;
         if(randMsgType == 0) {
             //count as response success
         }
@@ -78,6 +83,8 @@ public class DiscordMicrogame : MonoBehaviour
     }
 
     public void buttonResponseIgnore() {
+        responseComplete = true;
+        pinged = false;
         if(randMsgType == 0) {
             //count as response failed
         }
