@@ -23,11 +23,9 @@ Click pop-up ads to make them go away.
 
 ## Credits
 
-Main team:
-
 Programming: Jesus De La Rosa
 
-Art, sounds, and writing: Ethan Davis
+Art, Sounds, and Writing: Ethan Davis
 
 Art: Brian Potter
 
