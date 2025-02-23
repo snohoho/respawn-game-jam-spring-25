@@ -26,9 +26,29 @@ public class CodingMicrogame : MonoBehaviour
             "   if(I == HIM) {\n" +
             "       I = \"will\"\n" +
             "       continue;\n" +
-            "   }\n" +
-            "   if(I == HIM && I == \"will\") {\n" +
-            "       I = \"to be him\"\n" +
+            "   }\n",
+            "   for(file in AllFiles)\n" +
+            "   {\n" +
+	        "       if (file == virus)\n" +
+		    "           Delete file\n" +
+		    "           Debug.Log(\"Malicious file deleted, moving on\")\n" +
+	        "       else\n" +
+		    "           Debug.Log(\"Normal file, moving on\")\n" +
+            "   }\n",
+            "   while (true)\n" +
+            "   {\n" +
+	        "       GettingHacked = false\n" +
+	        "       AntiVirus.isOn = true\n" +
+	        "       CounterHack(hacker)\n" +
+	        "       SendUpdate(\"Get pwned loser\", \"1\")\n" +
+	        "       Stream.bitrate = 99999\n" +
+            "   }\n",
+            "   if(GettingHacked)\n" +
+            "   {\n" +
+	        "       StopHack(virus)\n" +
+	        "       CounterHack(hacker)\n" +
+	        "       DeleteViruses()\n" +
+	        "       AntiVirus.isOff = false\n" +
             "   }\n"
         };
     [SerializeField] private TextMeshProUGUI codeText;
@@ -76,7 +96,7 @@ public class CodingMicrogame : MonoBehaviour
             return;
         }
         if(Time.timeSinceLevelLoad >= timeIncDiff && responseTime >= 5f) {
-            timeIncDiff += 30f;
+            timeIncDiff += 15f;
             responseTime -= 1f;
         }
 

@@ -8,4 +8,8 @@ public class StartGame : MonoBehaviour
     public void StartButton() {
         SceneManager.LoadScene("JesusTestScene");
     }
+
+    public void QuitGame() {
+        Application.Quit();
+    }
 }

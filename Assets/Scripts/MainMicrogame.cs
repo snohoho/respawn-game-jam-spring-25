@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using TMPro;
 using Unity.VisualScripting;
 using System.Threading;
-using UnityEditorInternal;
 
 public class MainMicrogame : MonoBehaviour
 {

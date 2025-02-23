@@ -16,7 +16,7 @@ public class AdGeneration : MonoBehaviour
     public bool incChance;
 
     void Start() {
-        spawnChance = 25;
+        spawnChance = 40;
         spawnTimer = 0.0f;
         minTime = 1f;
     }
@@ -32,12 +32,12 @@ public class AdGeneration : MonoBehaviour
         }
         else if(codingMicrogame.successFlag == "fail") {
             StartCoroutine(IncreasedChance());
-            spawnChance = 50;
+            spawnChance = 60;
             minTime = 0.75f;
         }
         else if(codingMicrogame.successFlag == "worse") {
             StartCoroutine(IncreasedChance());
-            spawnChance = 75;
+            spawnChance = 80;
             minTime = 0.5f;
         }
 

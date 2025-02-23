@@ -14,20 +14,74 @@ public class DiscordMicrogame : MonoBehaviour
 
     string[] msgToRespond = new string[]
         {
-            "Sponsorship deal. This will give you viewers! We're dave fans since 2009 so you should take it!"
+            "Sponsorship deal. This will give you viewers! We're dave fans since 2009 so you should take it!",
+            "I love you (parasocially)",
+            "We want to sponsor you for a gajillion dollars!!!",
+            "You're so cool",
+            "Want to collab?",
+            "You should do a subathon",
+            "You're the best streamer",
+            "I made fanart of you",
+            "Want to join my podcast?",
+            "Try this game its so fun!!!",
+            "Yo it's your old friend across the city. Can you come over?",
+            "Are you available next Thursday?",
+            "Hop on Street Fighter 6",
+            "You playing something good?",
+
         };
 
     string[] msgToIgnore = new string[]
         {
-            "This is obviously spam. Do not respond to this. If you do you're a LOSER!!!!!!!!!!!!!!!!!"
+            "This is obviously spam. Do not respond to this. If you do you're a LOSER!!!!!!!!!!!!!!!!!",
+            "I love you (unironically)",
+            "FREE MONEY CLICK NOW",
+            "Check this out i promise it isnt a virus",
+            "i HAVE GIFT FOR U…",
+            "Can you make an OnlyDaves",
+            "URGENT: NEED MONEY FROM YOU",
+            "We want to sponsor you (we are evil)",
+            "Promote my memecoin!",
+            "Your mods suck hire me",
+            "C'est une arnaque",
+            "STOP PLAYIN THE GAME RN!!!!!",
+            "collect my pages",
         };
     string[] daveResponseGood = new string[]
         {
-            "sounds good bro!"
+            "sounds good bro!",
+            "awesome!",
+            "love it",
+            "cool",
+            "yup",
+            "okay",
+            "thanks brah",
+            "very epic",
+            "mhm",
+            "sounds good",
+            "lets talk later",
+            "thats great man!",
+            "yay!"
+
         };
     string[] daveResponseBad = new string[]
         {
-            "shut up man"
+            "shut up man",
+            "no lol",
+            "wtf",
+            "???",
+            "i hate you",
+            "go away",
+            "huh",
+            "who are you?",
+            "frick off",
+            "im busy",
+            "sorry no",
+            "L bozo",
+            "who?",
+            "dont bother me rn",
+            "now is not the time",
+            "ew"
         };
 
     [SerializeField] private TextMeshProUGUI discMsg;
@@ -61,7 +115,7 @@ public class DiscordMicrogame : MonoBehaviour
             return;
         }
         if(Time.timeSinceLevelLoad >= timeIncDiff && responseTime >= 5f) {
-            timeIncDiff += 30f;
+            timeIncDiff += 15f;
             responseTime -= 1f;
         }
 
