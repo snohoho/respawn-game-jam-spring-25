@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "respawn-game-jam-spring-25.sln"
+    "dotnet.defaultSolution": "gamejamsp2025.sln"
 }
