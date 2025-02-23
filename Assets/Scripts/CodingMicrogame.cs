@@ -142,7 +142,7 @@ public class CodingMicrogame : MonoBehaviour
 
     private void AddText(InputControl act) {
         buttonPressed = act.IsPressed();
-        if(microgameOpen && act is KeyControl && !codeComplete) {
+        if(microgameOpen && !codeComplete) {
             if(currStringCt >= codeBlocks[randCodeBlock].Length) {
                 successFlag = "success";
                 currStringCt = 0;
