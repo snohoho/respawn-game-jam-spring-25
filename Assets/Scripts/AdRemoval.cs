@@ -5,7 +5,7 @@ using UnityEngine;
 public class AdRemoval : MonoBehaviour
 {
     public void RemoveAd() {
-        Debug.Log("remove");
+        PersistentData.AdsClosed++;
         Destroy(this.gameObject);
     }
 }

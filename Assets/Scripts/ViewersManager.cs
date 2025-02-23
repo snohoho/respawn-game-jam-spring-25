@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ViewersManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class ViewersManager : MonoBehaviour
     [SerializeField] private DonoMicrogame donoMicrogame;
     [SerializeField] private ChatMicrogame chatMicrogame;
 
-    private int viewers;
+    public int viewers;
     [SerializeField] private TextMeshProUGUI viewerCountTxt;
     private float viewerLossTimer;
     private float multIncreaseTimer;
@@ -28,7 +29,7 @@ public class ViewersManager : MonoBehaviour
     void Update()
     {
         if(viewers <= 0) {
-            
+            viewerCountTxt.text = "Viewers: 0";
             return;
         }
         viewerCountTxt.text = "Viewers: " + viewers.ToString();
@@ -44,6 +45,7 @@ public class ViewersManager : MonoBehaviour
 
     void FixedUpdate() {
         if(viewers <= 0) {
+            StartCoroutine(GameOver());
             return;
         }
 
@@ -67,6 +69,7 @@ public class ViewersManager : MonoBehaviour
 
         //chat microgame
         if(chatMicrogame.chatClicked == true) {
+            PersistentData.ChatResponded++;
             chatMicrogame.chatClicked = false;
             viewers += (int)Mathf.Round(Random.Range(90,111));
         }
@@ -82,18 +85,22 @@ public class ViewersManager : MonoBehaviour
 
         //discord microgame
         if(discordMicrogame.successFlag == "success") {
+            PersistentData.DiscordMessagesResponded++;
             viewers += (int)Mathf.Round(Random.Range(150,211));
         }
         else if(discordMicrogame.successFlag == "fail") {
+            PersistentData.DiscordMessagesResponded++;
             viewers -= (int)Mathf.Round(Random.Range(50,101) * viewerLossMult);
         }
         else if(discordMicrogame.successFlag == "worse") {
+            PersistentData.DiscordMessagesResponded++;
             viewers -= (int)Mathf.Round(Random.Range(150,211) * viewerLossMult);
         }
         discordMicrogame.successFlag = null;
 
         //coding microgame
         if(codingMicrogame.successFlag == "success") {
+            PersistentData.CounterhackSuccess++;
             viewers += (int)Mathf.Round(Random.Range(50,76));
         }
         else if(codingMicrogame.successFlag == "fail") {
@@ -106,6 +113,7 @@ public class ViewersManager : MonoBehaviour
         
         //dono microgame
         if(donoMicrogame.successFlag == "success") {
+            PersistentData.DonoResponded++;
             donoMicrogame.setName = false;
             viewers += (int)Mathf.Round(Random.Range(150,211));
         }
@@ -114,5 +122,10 @@ public class ViewersManager : MonoBehaviour
             viewers -= (int)Mathf.Round(Random.Range(150,211) * viewerLossMult);
         }
         donoMicrogame.successFlag = null;
+    }
+
+    IEnumerator GameOver() {
+        yield return new WaitForSeconds(3f);
+        SceneManager.LoadScene("EndScene");
     }
 }
