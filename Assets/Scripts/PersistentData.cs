@@ -11,4 +11,5 @@ public static class PersistentData
     public static int ChatResponded { get; set; }
     public static int DonoResponded { get; set; }
     public static int AdsClosed { get; set; }
+    public static int AsteroidsHit { get; set; }
 }

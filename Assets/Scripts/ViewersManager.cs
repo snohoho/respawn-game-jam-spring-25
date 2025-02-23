@@ -126,6 +126,6 @@ public class ViewersManager : MonoBehaviour
 
     IEnumerator GameOver() {
         yield return new WaitForSeconds(3f);
-        SceneManager.LoadScene("EndScene");
+        SceneManager.LoadScene("GameOver");
     }
 }

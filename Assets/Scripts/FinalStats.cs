@@ -15,6 +15,7 @@ public class FinalStats : MonoBehaviour
         "Chat Responses: " + PersistentData.ChatResponded + "\n" +
         "Donation Responses: " + PersistentData.DonoResponded + "\n" +
         "Ads Popped: " + PersistentData.AdsClosed + "\n" +
+        "Asteroids Hit: " + PersistentData.AsteroidsHit + "\n" +
         "Counterhacks: " + PersistentData.CounterhackSuccess + "\n" +
         "Discord Responses: " + PersistentData.DiscordMessagesResponded;
     }

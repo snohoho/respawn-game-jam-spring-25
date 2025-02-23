@@ -61,6 +61,8 @@ public class MainMicrogame : MonoBehaviour
 
             hp--;
             hpIcons[hp].SetActive(false);
+            StartCoroutine(PlayerHit());
+            PersistentData.AsteroidsHit++;
             player.GetComponent<PlayerCollider>().hit = false;
             if(hp == 0) {
                 successFlag = "fail";
@@ -106,7 +108,7 @@ public class MainMicrogame : MonoBehaviour
         hpIcons[2].SetActive(true);
         hp = 3;
         survivalTimer = 0f;
-        playerTransform.localPosition = new Vector3 (140,0,0);
+        playerTransform.localPosition = new Vector3 (200,0,0);
 
         int countdown = 3;
         while(countdown > 0) {
@@ -117,6 +119,19 @@ public class MainMicrogame : MonoBehaviour
         resetPanel.SetActive(false);
         resetting = false;
         runningCR = false;
+    }
+
+    IEnumerator PlayerHit() {
+        int loopCt = 0;
+        while(loopCt < 5) {
+            player.GetComponent<Image>().enabled = false;
+            yield return new WaitForSeconds(0.1f);
+            player.GetComponent<Image>().enabled = true;
+            yield return new WaitForSeconds(0.1f);
+
+
+            loopCt++;
+        }
     }
 
     IEnumerator MovePlayer(RectTransform obj, float goalPos) {

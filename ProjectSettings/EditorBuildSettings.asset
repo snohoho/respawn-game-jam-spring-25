@@ -4,5 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 4aee176f46ac29b4a8031e79713bc432
+  - enabled: 1
+    path: Assets/Scenes/JesusTestScene.unity
+    guid: ba0a574d8840576498e70afca4567dad
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 3fdf2c508e64e2840b60f7cffab30e96
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

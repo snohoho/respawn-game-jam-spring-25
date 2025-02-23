@@ -10,13 +10,27 @@ public class ChatMicrogame : MonoBehaviour
     private bool flickering;
     private bool pinged;
     [SerializeField] private TextMeshProUGUI pingedText;
+    string[] messages = new string[]
+        {
+            "MinecraftSteve: hi"
+        };
+    [SerializeField] private TextMeshProUGUI chat;
+    private float chatCD;
+
     void Start()
     {
         cooldown = 0f;
+        chatCD = 0f;
     }
 
     void FixedUpdate()
     {
+        if(chatCD <= 0f) {
+            chat.text += "\n" + messages[Random.Range(0,messages.Length)];
+            chatCD = Random.Range(0.1f,1f);
+        }
+        chatCD -= Time.deltaTime;
+
         if(cooldown > 0) {
             cooldown -= Time.deltaTime;
         }
