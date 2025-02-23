@@ -8,6 +8,7 @@ public class AdGeneration : MonoBehaviour
     [SerializeField] private GameObject[] adsPrefabs;
     private GameObject randAd;
     private float spawnTimer;
+    private float minTime;
     public int spawnChance;
 
     [SerializeField] private CodingMicrogame codingMicrogame;
@@ -17,6 +18,7 @@ public class AdGeneration : MonoBehaviour
     void Start() {
         spawnChance = 25;
         spawnTimer = 0.0f;
+        minTime = 1f;
     }
 
     void FixedUpdate() {
@@ -31,16 +33,17 @@ public class AdGeneration : MonoBehaviour
         else if(codingMicrogame.successFlag == "fail") {
             StartCoroutine(IncreasedChance());
             spawnChance = 50;
-            
+            minTime = 0.75f;
         }
         else if(codingMicrogame.successFlag == "worse") {
             StartCoroutine(IncreasedChance());
             spawnChance = 75;
+            minTime = 0.5f;
         }
 
         spawnTimer += Time.deltaTime;
 
-        if(Random.Range(0,100) < spawnChance && spawnTimer >= 1f && !adsPaused) {
+        if(Random.Range(0,100) < spawnChance && spawnTimer >= minTime && !adsPaused) {
             spawnTimer = 0.0f;
 
             randAd = adsPrefabs[Random.Range(0,adsPrefabs.Length)];
@@ -62,6 +65,9 @@ public class AdGeneration : MonoBehaviour
             yield return new WaitForSeconds(10f);
             adsPaused = false;
         }
+
+        spawnChance = 25;
+        minTime = 1f;
     }
 
     IEnumerator IncreasedChance() {
@@ -71,5 +77,8 @@ public class AdGeneration : MonoBehaviour
             yield return new WaitForSeconds(10f);
             incChance = false;
         }
+
+        spawnChance = 25;
+        minTime = 1f;
     }
 }

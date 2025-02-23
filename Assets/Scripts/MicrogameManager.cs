@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MicrogameManager : MonoBehaviour
@@ -16,6 +17,7 @@ public class MicrogameManager : MonoBehaviour
     private int newMicrogameChance;
     private int randomMicrogame;
     private float timeIncDiff;
+    [SerializeField] AudioManager audioManager;
 
     void Start() {
         newMicrogameTimer = 0f;
@@ -39,25 +41,26 @@ public class MicrogameManager : MonoBehaviour
         
         if(Random.Range(0,100) < newMicrogameChance && newMicrogameTimer >= 5f) {
             randomMicrogame = Random.Range(0,3);
-            Debug.Log("selected microgame: " + randomMicrogame);
             switch(randomMicrogame) {
                 case 0:
                     if(codingMicrogame.pinged == false && codingMicrogame.cooldown <= 0f) {
                         Debug.Log("run coding mg");
                         codingMicrogame.pinged = true;
+                        audioManager.CreateSource(audioManager.audioClips[8]);
                     }
                     break;
                 case 1:
                     Debug.Log("run disc mg");
-                    if(discordMicrogame.pinged == false) {
+                    if(discordMicrogame.pinged == false && discordMicrogame.cooldown <= 0f) {
                         discordMicrogame.pinged = true;
+                        audioManager.CreateSource(audioManager.audioClips[0]);
                     }
                     break;
                 case 2:
                     Debug.Log("run dono mg");
-                    if(donoMicrogame.pinged == false) {
-                        
+                    if(donoMicrogame.pinged == false) { 
                         donoMicrogame.pinged = true;
+                        audioManager.CreateSource(audioManager.audioClips[1]);
                     }
                     break;
                 default:

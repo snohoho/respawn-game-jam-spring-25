@@ -37,6 +37,8 @@ public class DonoMicrogame : MonoBehaviour
 
     void FixedUpdate() {
         if(pinged) {
+            readDono = false;
+            
             if(!flickering) {
                 StartCoroutine(FlickerPing());
             }
@@ -55,6 +57,8 @@ public class DonoMicrogame : MonoBehaviour
             if(responseTimer >= 3.0f && !readDono) {
                 pinged = false;
                 successFlag = "fail";
+                setName = false;
+                responseTimer = 0f;
                 donoCanvas.sortingOrder = -500;
             }
 
@@ -68,6 +72,7 @@ public class DonoMicrogame : MonoBehaviour
         successFlag = "success";
         readDono = true;
         setName = false;
+        responseTimer = 0f;
         donoCanvas.sortingOrder = -500;
     }
 

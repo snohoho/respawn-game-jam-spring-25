@@ -26,6 +26,7 @@ public class MainMicrogame : MonoBehaviour
     private bool runningCR;
     public bool survived;
     private float survivalTimer;
+    [SerializeField] AudioManager audioManager;
 
     void Start()
     {
@@ -34,6 +35,7 @@ public class MainMicrogame : MonoBehaviour
         hp = 3;
         resetPanel.SetActive(false);
         survivalTimer = 0f;
+        audioManager.CreateSource(audioManager.audioClips[5]);
     }
 
     void FixedUpdate()
@@ -65,6 +67,7 @@ public class MainMicrogame : MonoBehaviour
             PersistentData.AsteroidsHit++;
             player.GetComponent<PlayerCollider>().hit = false;
             if(hp == 0) {
+                audioManager.CreateSource(audioManager.audioClips[7]);
                 successFlag = "fail";
                 resetting = true;
                 resetText.text = "Restarting...";
@@ -119,16 +122,18 @@ public class MainMicrogame : MonoBehaviour
         resetPanel.SetActive(false);
         resetting = false;
         runningCR = false;
+        audioManager.CreateSource(audioManager.audioClips[5]);
     }
 
     IEnumerator PlayerHit() {
+        audioManager.CreateSource(audioManager.audioClips[2]);
+
         int loopCt = 0;
         while(loopCt < 5) {
             player.GetComponent<Image>().enabled = false;
             yield return new WaitForSeconds(0.1f);
             player.GetComponent<Image>().enabled = true;
             yield return new WaitForSeconds(0.1f);
-
 
             loopCt++;
         }

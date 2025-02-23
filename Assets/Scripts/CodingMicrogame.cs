@@ -43,6 +43,8 @@ public class CodingMicrogame : MonoBehaviour
     public float cooldown;
     private float timeIncDiff;
     private float responseTime;
+    [SerializeField] AudioManager audioManager;
+
 
     void Start() {
         codeText.text = "public class CounterHackProtocol {\n";
@@ -103,8 +105,10 @@ public class CodingMicrogame : MonoBehaviour
                     responseTimer = 0f;
                     codeComplete = true;
                     messageSelected = false;
+                    pinged = false;
                     codeText.text += "\n\n[COUNTERHACK UNSUCCESSFUL]";
                     pingedText.gameObject.SetActive(false);
+                    audioManager.CreateSource(audioManager.audioClips[10]);
 
                     flickering = false;
                 }
@@ -120,8 +124,10 @@ public class CodingMicrogame : MonoBehaviour
                     responseTimer = 0f;
                     codeComplete = true;
                     messageSelected = false;
+                    pinged = false;
                     codeText.text += "\n\n[COUNTERHACK UNSUCCESSFUL]";
                     pingedText.gameObject.SetActive(false);
+                    audioManager.CreateSource(audioManager.audioClips[10]);
                 }
             }
 
@@ -144,9 +150,11 @@ public class CodingMicrogame : MonoBehaviour
                 responseTimer = 0f;
                 codeComplete = true;
                 messageSelected = false;
+                pinged = false;
                 codeText.text += "}\n\n";
                 codeText.text += "[COUNTERHACK SUCCESSFUL]";
                 pingedText.gameObject.SetActive(false);
+                audioManager.CreateSource(audioManager.audioClips[9]);
             }
             else {
                 codeText.text += codeBlocks[randCodeBlock][currStringCt];
