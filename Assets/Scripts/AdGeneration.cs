@@ -9,7 +9,6 @@ public class AdGeneration : MonoBehaviour
     private GameObject randAd;
     private float spawnTimer;
     public int spawnChance;
-    private float timeBeforeStart;
 
     [SerializeField] private CodingMicrogame codingMicrogame;
     public bool adsPaused;
@@ -18,13 +17,11 @@ public class AdGeneration : MonoBehaviour
     void Start() {
         spawnChance = 25;
         spawnTimer = 0.0f;
-        timeBeforeStart = 10f;
     }
 
     void FixedUpdate() {
-        //wait 10s before spawning ads
-        if(timeBeforeStart > 0) {
-            timeBeforeStart -= Time.deltaTime;
+        //wait 10s before spawning microgames
+        if(Time.timeSinceLevelLoad <= 10f) {
             return;
         }
 

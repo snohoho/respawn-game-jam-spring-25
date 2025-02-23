@@ -27,17 +27,30 @@ public class ViewersManager : MonoBehaviour
 
     void Update()
     {
+        if(viewers <= 0) {
+            
+            return;
+        }
         viewerCountTxt.text = "Viewers: " + viewers.ToString();
 
         int time = (int)Time.timeSinceLevelLoad;
         int ss = time%60;
         int mm = time/60%60;
         string timeTxt = string.Format("{0:00}:{1:00}",mm,ss);
+        PersistentData.Time = timeTxt;
 
         uptimeTxt.text = "Uptime: " + timeTxt;
     }
 
     void FixedUpdate() {
+        if(viewers <= 0) {
+            return;
+        }
+
+        if(PersistentData.PeakViewers < viewers) {
+            PersistentData.PeakViewers = viewers;
+        }
+
         viewerLossTimer += Time.deltaTime;
         multIncreaseTimer += Time.deltaTime;
 
@@ -52,45 +65,54 @@ public class ViewersManager : MonoBehaviour
             viewerLossTimer = 0f;
         }
 
-        //main microgame
-
-
         //chat microgame
         if(chatMicrogame.chatClicked == true) {
             chatMicrogame.chatClicked = false;
-            viewers += Random.Range(90,111);
+            viewers += (int)Mathf.Round(Random.Range(90,111));
         }
+
+        //main microgame
+        if(mainMicrogame.successFlag == "success") {
+            viewers += (int)Mathf.Round(Random.Range(150,211));
+        }
+        else if(mainMicrogame.successFlag == "fail") {
+            viewers -= (int)Mathf.Round(Random.Range(50,101) * viewerLossMult);
+        }
+        mainMicrogame.successFlag = null;
 
         //discord microgame
         if(discordMicrogame.successFlag == "success") {
-            viewers += Random.Range(150,211);
+            viewers += (int)Mathf.Round(Random.Range(150,211));
         }
         else if(discordMicrogame.successFlag == "fail") {
-            viewers -= Random.Range(50,101);
+            viewers -= (int)Mathf.Round(Random.Range(50,101) * viewerLossMult);
         }
         else if(discordMicrogame.successFlag == "worse") {
-            viewers -= Random.Range(150,211);
+            viewers -= (int)Mathf.Round(Random.Range(150,211) * viewerLossMult);
         }
+        discordMicrogame.successFlag = null;
 
         //coding microgame
         if(codingMicrogame.successFlag == "success") {
-            viewers += Random.Range(50,76);
+            viewers += (int)Mathf.Round(Random.Range(50,76));
         }
         else if(codingMicrogame.successFlag == "fail") {
-            viewers -= Random.Range(50,76);
+            viewers -= (int)Mathf.Round(Random.Range(50,76) * viewerLossMult);
         }
         else if(codingMicrogame.successFlag == "worse") {
-            viewers -= Random.Range(90,121);
+            viewers -= (int)Mathf.Round(Random.Range(90,121) * viewerLossMult);
         }
+        codingMicrogame.successFlag = null;
         
         //dono microgame
         if(donoMicrogame.successFlag == "success") {
             donoMicrogame.setName = false;
-            viewers += Random.Range(150,211);
+            viewers += (int)Mathf.Round(Random.Range(150,211));
         }
         else if(donoMicrogame.successFlag == "fail") {
             donoMicrogame.setName = false;
-            viewers -= Random.Range(150,211);
+            viewers -= (int)Mathf.Round(Random.Range(150,211) * viewerLossMult);
         }
+        donoMicrogame.successFlag = null;
     }
 }

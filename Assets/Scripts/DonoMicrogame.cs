@@ -23,32 +23,43 @@ public class DonoMicrogame : MonoBehaviour
     public string successFlag;
     [SerializeField] private TextMeshProUGUI donoNameText;
     [SerializeField] private TextMeshProUGUI donoMsgText;
+    [SerializeField] private Canvas donoCanvas;
+    [SerializeField] private TextMeshProUGUI pingedText;
+    private bool flickering;
 
     void Start() {
         pinged = false;
         readDono = false;
         setName = false;
-    }
-
-    void Update() {
-        
+        responseTimer = 0f;
+        flickering = false;
     }
 
     void FixedUpdate() {
         if(pinged) {
+            if(!flickering) {
+                StartCoroutine(FlickerPing());
+            }
+
             if(!setName) {
                 donoNameText.text = names[Random.Range(0,names.Length)] +
-                                "GAVE $" + Random.Range(5,10000);
+                                " GAVE $" + Random.Range(5,10000);
                 donoMsgText.text = donoMsg[Random.Range(0,donoMsg.Length)];
                 setName = true;
+
+                donoCanvas.sortingOrder = 8;
             }
 
             responseTimer += Time.deltaTime;
 
-            if(responseTimer >= 10.0f && !readDono) {
+            if(responseTimer >= 3.0f && !readDono) {
                 pinged = false;
                 successFlag = "fail";
+                donoCanvas.sortingOrder = -500;
             }
+
+            int temp = 3 - (int)responseTimer;
+            pingedText.text = temp.ToString();
         }
     }
 
@@ -56,5 +67,19 @@ public class DonoMicrogame : MonoBehaviour
         pinged = false;
         successFlag = "success";
         readDono = true;
+        setName = false;
+        donoCanvas.sortingOrder = -500;
+    }
+
+    IEnumerator FlickerPing() {
+        flickering = true;
+
+        while(pinged) {
+            pingedText.gameObject.SetActive(!pingedText.gameObject.activeSelf);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        flickering = false;
     }
 }

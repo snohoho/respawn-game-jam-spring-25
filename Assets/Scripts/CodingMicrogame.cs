@@ -11,6 +11,8 @@ public class CodingMicrogame : MonoBehaviour
 {
     public bool microgameOpen;
     public bool pinged;
+    [SerializeField] private TextMeshProUGUI pingedText;
+    private bool flickering;
 
     string[] codeBlocks = new string[]
         {
@@ -37,21 +39,29 @@ public class CodingMicrogame : MonoBehaviour
     private float responseTimer;
     public string successFlag;
     private System.IDisposable keyboardListener;
+    private bool messageSelected;
+    public float cooldown;
+    private float timeIncDiff;
+    private float responseTime;
 
     void Start() {
         codeText.text = "public class CounterHackProtocol {\n";
 
         randCodeBlock = Random.Range(0,codeBlocks.Length);
         currStringCt = 0;
-        microgameOpen = true;
+        microgameOpen = false;
         buttonPressed = false;
         codeComplete = false;
+        pinged = false;
+        flickering = false;
+        messageSelected = false;
+        cooldown = 0f;
+        timeIncDiff = 40f;
+        responseTime = 15f;
     }
 
     void OnEnable() {
-        if(!buttonPressed && !codeComplete) {
-            keyboardListener = InputSystem.onAnyButtonPress.Call(AddText);
-        }
+        keyboardListener = InputSystem.onAnyButtonPress.Call(AddText);
     }
 
     void OnDisable() {
@@ -59,53 +69,101 @@ public class CodingMicrogame : MonoBehaviour
     }
 
     void FixedUpdate() {
-        if(pinged && !microgameOpen) {
-            responseTimer += Time.deltaTime;
-
-            if(responseTimer > 15.0f && !codeComplete) {
-                //count as a worse response failed
-                successFlag = "worse";
-                pinged = false;
-            }
+        if(cooldown > 0f) {
+            cooldown -= Time.deltaTime;
+            return;
+        }
+        if(Time.timeSinceLevelLoad >= timeIncDiff && responseTime >= 5f) {
+            timeIncDiff += 30f;
+            responseTime -= 1f;
         }
 
-        if(pinged && microgameOpen) {
-            responseTimer += Time.deltaTime;
-
-            if(codeComplete) {
-                successFlag = "success";
-                pinged = false;
-                responseTimer = 0;
-            }
-            
-            if(responseTimer > 15.0f && !codeComplete) {
-                successFlag = "fail";
-                pinged = false;
-                responseTimer = 0;
-            }
-        }
-
-        if(codeComplete && !microgameOpen) {
+        if(pinged) {
             codeComplete = false;
-            codeText.text = "public class CounterHackProtocol {\n";
+
+            if(!messageSelected) {
+                messageSelected = true;
+                codeText.text = "[HACK DETECTED. BEGIN COUNTERHACK!]\n" +
+                            "public class CounterHackProtocol {\n";
+                
+                randCodeBlock = Random.Range(0,codeBlocks.Length);
+            }
+
+            if(!microgameOpen) {
+                if(!flickering) {
+                    StartCoroutine(FlickerPing());
+                }
+
+                responseTimer += Time.deltaTime;
+                if(responseTimer > responseTime && !codeComplete) {
+                    //count as a worse response failed
+                    successFlag = "worse";
+                    currStringCt = 0;
+                    cooldown = 3f;
+                    responseTimer = 0f;
+                    codeComplete = true;
+                    messageSelected = false;
+                    codeText.text += "\n\n[COUNTERHACK UNSUCCESSFUL]";
+                    pingedText.gameObject.SetActive(false);
+
+                    flickering = false;
+                }
+            }
+            else if(microgameOpen) {
+                pingedText.gameObject.SetActive(true);
+
+                responseTimer += Time.deltaTime;           
+                if(responseTimer > responseTime && !codeComplete) {
+                    successFlag = "fail";
+                    currStringCt = 0;
+                    cooldown = 3f;
+                    responseTimer = 0f;
+                    codeComplete = true;
+                    messageSelected = false;
+                    codeText.text += "\n\n[COUNTERHACK UNSUCCESSFUL]";
+                    pingedText.gameObject.SetActive(false);
+                }
+            }
+
+            int temp = (int)responseTime - (int)responseTimer;
+            pingedText.text = temp.ToString();
+        }
+        else if(!pinged) {
+            pingedText.gameObject.SetActive(false);
+            codeText.text = "[NO HACKING DETECTED]";
         }
     }
 
     private void AddText(InputControl act) {
         buttonPressed = act.IsPressed();
-        if(microgameOpen && act is KeyControl) {
+        if(microgameOpen && act is KeyControl && !codeComplete) {
             if(currStringCt >= codeBlocks[randCodeBlock].Length) {
+                successFlag = "success";
                 currStringCt = 0;
+                cooldown = 3f;
+                responseTimer = 0f;
                 codeComplete = true;
+                messageSelected = false;
                 codeText.text += "}\n\n";
                 codeText.text += "[COUNTERHACK SUCCESSFUL]";
-
-                randCodeBlock = Random.Range(0,codeBlocks.Length);
+                pingedText.gameObject.SetActive(false);
             }
             else {
                 codeText.text += codeBlocks[randCodeBlock][currStringCt];
                 currStringCt++;
             }
         }
+    }
+
+    IEnumerator FlickerPing() {
+        flickering = true;
+
+        while(pinged && !microgameOpen && flickering) {
+            pingedText.gameObject.SetActive(!pingedText.gameObject.activeSelf);
+
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        flickering = false;
     }
 }
