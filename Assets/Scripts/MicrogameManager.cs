@@ -18,6 +18,9 @@ public class MicrogameManager : MonoBehaviour
     private int randomMicrogame;
     private float timeIncDiff;
     [SerializeField] AudioManager audioManager;
+    [SerializeField] Animator mainAnimator;
+    [SerializeField] Animator discAnimator;
+    [SerializeField] Animator codeAnimator;
 
     void Start() {
         newMicrogameTimer = 0f;
@@ -73,27 +76,52 @@ public class MicrogameManager : MonoBehaviour
     }
 
     public void OpenMicrogame(string microgame) {
+
         switch(microgame) {
             case "main":
                 if(mainCanvas.sortingOrder != 3) {
                     mainCanvas.sortingOrder = 3;
+                    mainAnimator.ResetTrigger("minimize");
+                    mainAnimator.SetTrigger("maximize");
+                    discordMicrogame.microgameOpen = false;
+                    codingMicrogame.microgameOpen = false;
                 }
                 else if(mainCanvas.sortingOrder == 3) {
-                    mainCanvas.sortingOrder = -500;
+                    StartCoroutine(WaitForAnim(mainCanvas, mainAnimator));
+                    mainAnimator.ResetTrigger("maximize");
+                    mainAnimator.SetTrigger("minimize");
+
+                    if(discCanvas.sortingOrder <= -500) {
+                        discordMicrogame.microgameOpen = true;
+                    }
+                    if(codeCanvas.sortingOrder <= -500) {
+                        codingMicrogame.microgameOpen = true;
+                    }
+                    
+                    codingMicrogame.microgameOpen = false;
                 }
+                
+                if(discCanvas.sortingOrder <= -500) {
+                    discordMicrogame.microgameOpen = false;
+                }
+                if(codeCanvas.sortingOrder <= -500) {
+                    codingMicrogame.microgameOpen = false;
+                }
+
                 discCanvas.sortingOrder--;
                 codeCanvas.sortingOrder--;
-
-                discordMicrogame.microgameOpen = false;
-                codingMicrogame.microgameOpen = false;
                 break;
             case "disc":
                 if(discCanvas.sortingOrder != 3) {
                     discCanvas.sortingOrder = 3;
+                    discAnimator.ResetTrigger("minimize");
+                    discAnimator.SetTrigger("maximize");
                     discordMicrogame.microgameOpen = true;
                 }
                 else if(discCanvas.sortingOrder == 3) {
-                    discCanvas.sortingOrder = -500;
+                    StartCoroutine(WaitForAnim(discCanvas, discAnimator));
+                    discAnimator.ResetTrigger("maximize");
+                    discAnimator.SetTrigger("minimize");
                     discordMicrogame.microgameOpen = false;
                 }
                 mainCanvas.sortingOrder--;
@@ -102,10 +130,14 @@ public class MicrogameManager : MonoBehaviour
             case "code":
                 if(codeCanvas.sortingOrder != 3) {
                     codeCanvas.sortingOrder = 3;
+                    codeAnimator.ResetTrigger("minimize");
+                    codeAnimator.SetTrigger("maximize");
                     codingMicrogame.microgameOpen = true;
                 }
                 else if(codeCanvas.sortingOrder == 3) {
-                    codeCanvas.sortingOrder = -500;
+                    StartCoroutine(WaitForAnim(codeCanvas, codeAnimator));
+                    codeAnimator.ResetTrigger("maximize");
+                    codeAnimator.SetTrigger("minimize");
                     codingMicrogame.microgameOpen = false;
                 }
                 mainCanvas.sortingOrder--;
@@ -114,5 +146,11 @@ public class MicrogameManager : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    IEnumerator WaitForAnim(Canvas canvas, Animator animator) {
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f );
+        yield return new WaitWhile(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime <= 1.0f);
+        canvas.sortingOrder = -500;
     }
 }
